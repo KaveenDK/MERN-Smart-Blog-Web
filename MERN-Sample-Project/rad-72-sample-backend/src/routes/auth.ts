@@ -4,7 +4,7 @@ import {
   login,
   registerAdmin,
   registerUser
-} from "../controllers/auth.controler"
+} from "../controllers/auth.controller"
 import { authenticate } from "../middleware/auth"
 import { requireRole } from "../middleware/role"
 import { Role } from "../models/user.model"

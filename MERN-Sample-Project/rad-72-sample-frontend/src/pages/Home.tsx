@@ -12,7 +12,7 @@ export default function Home() {
     try {
       setUser(null)
       localStorage.removeItem("accessToken")
-      navigate("/login")
+      navigate("/")
     } catch (error) {
       console.error("Logout failed:", error)
     } finally {
