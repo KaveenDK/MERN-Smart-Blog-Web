@@ -11,19 +11,23 @@ import { upload } from "../middleware/upload"
 
 const router = Router()
 
-// create post - authenticated users
+// only for Authors
 router.post(
-    "/create", 
-    authenticate, 
-    requireRole(Role.AUTHOR), 
-    upload.single("image"), // form data key name
-    createPost
+  "/create",
+  authenticate,
+  requireRole([Role.ADMIN, Role.AUTHOR]),
+  upload.single("image"), // form data key name
+  createPost
 )
 
-// get all posts - public
 router.get("/", getAllPost)
 
-// get my posts - authenticated users
-router.get("/me", authenticate, requireRole(Role.USER), getMyPost)
+// ADMIN, AUTHOR
+router.get(
+  "/me",
+  authenticate,
+  requireRole([Role.ADMIN, Role.AUTHOR]),
+  getMyPost
+)
 
 export default router

@@ -2,7 +2,7 @@
 
 import multer from "multer"
 
-// store files in memory
+// store file in memory
 const storage = multer.memoryStorage()
 
 export const upload = multer({ storage })

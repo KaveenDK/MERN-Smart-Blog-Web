@@ -1,12 +1,17 @@
 import { Request, Response } from "express"
 import { IUSER, Role, User } from "../models/user.model"
 import bcrypt from "bcryptjs"
-import { signAccessToken } from "../utils/tokens"
+import { signAccessToken, signRefreshToken } from "../utils/tokens"
 import { AUthRequest } from "../middleware/auth"
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config()
+
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body
+    const { email, password, firstname, lastname } = req.body
 
     // left email form model, right side data varible
     //   User.findOne({ email: email })
@@ -21,6 +26,8 @@ export const registerUser = async (req: Request, res: Response) => {
     const user = await User.create({
       email,
       password: hash,
+      firstname,
+      lastname,
       roles: [Role.USER]
     })
 
@@ -51,13 +58,15 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const accessToken = signAccessToken(existingUser)
+    const refreshToken = signRefreshToken(existingUser)
 
     res.status(200).json({
       message: "success",
       data: {
         email: existingUser.email,
         roles: existingUser.roles,
-        accessToken
+        accessToken,
+        refreshToken
       }
     })
   } catch (err) {
@@ -112,4 +121,26 @@ export const getMyProfile = async (req: AUthRequest, res: Response) => {
   const { email, roles, _id } = user as IUSER
 
   res.status(200).json({ message: "ok", data: { id: _id, email, roles } })
+}
+
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body
+    if (!token) {
+      return res.status(400).json({ message: "Token required" })
+    }
+
+    const payload: any = jwt.verify(token, JWT_REFRESH_SECRET)
+    const user = await User.findById(payload.sub)
+    if (!user) {
+      return res.status(403).json({ message: "Invalid refresh token" })
+    }
+    const accessToken = signAccessToken(user)
+
+    res.status(200).json({
+      accessToken
+    })
+  } catch (err) {
+    res.status(403).json({ message: "Invalid or expire token" })
+  }
 }

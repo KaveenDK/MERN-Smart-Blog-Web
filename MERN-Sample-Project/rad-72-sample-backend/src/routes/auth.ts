@@ -2,6 +2,7 @@ import { Router } from "express"
 import {
   getMyProfile,
   login,
+  refreshToken,
   registerAdmin,
   registerUser
 } from "../controllers/auth.controller"
@@ -17,11 +18,13 @@ router.post("/register", registerUser)
 // login - public
 router.post("/login", login)
 
+router.post("/refresh", refreshToken)
+
 // register (ADMIN) - Admin only
 router.post(
   "/admin/register",
   authenticate,
-  requireRole(Role.ADMIN),
+  requireRole([Role.ADMIN]),
   registerAdmin
 )
 
