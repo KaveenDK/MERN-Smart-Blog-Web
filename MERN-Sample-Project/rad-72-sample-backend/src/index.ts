@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import mongoose from "mongoose"
 import authRouter from "./routes/auth"
 import postRouter from "./routes/post"
+import aiRouter from "./routes/ai"
 import { authenticate } from "./middleware/auth"
 import { requireRole } from "./middleware/role"
 import { Role } from "./models/user.model"
@@ -24,6 +25,7 @@ app.use(
 
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/post", postRouter)
+app.use("/api/v1/ai", aiRouter)
 
 // sample route with auth
 
