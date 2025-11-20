@@ -18,7 +18,7 @@ const app = express()
 app.use(express.json())
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://smart-blog-web-frontend.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"] // optional
   })
 )
@@ -26,6 +26,10 @@ app.use(
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/post", postRouter)
 app.use("/api/v1/ai", aiRouter)
+
+app.get("/", (req, res) => {
+  res.status(200).send("Backend is working")
+})
 
 // sample route with auth
 

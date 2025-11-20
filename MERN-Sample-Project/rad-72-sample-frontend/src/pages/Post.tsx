@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, type JSX } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import { getAllPost } from "../services/post";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
@@ -11,7 +11,7 @@ export default function Post(): JSX.Element {
   const [mounted, setMounted] = useState<boolean>(false);
 
   const navigate = useNavigate();
-  const { user, setUser } = useAuth();
+  const { setUser } = useAuth();
 
   const handleLogout = () => {
     setUser(null);
